@@ -3,12 +3,14 @@ import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { Alert, FlatList, Image, RefreshControl, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, RefreshControl, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../../assets/styles/home.styles";
 import { BalanceCard } from "../../components/BalanceCard";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import NoTransactionsFound from "../../components/NoTransactionsFound";
 import PageLoader from "../../components/PageLoader";
 import { TransactionItem } from "../../components/TransactionItem";
+import { COLORS } from "../../constants/colors";
 import { useTransactions } from "../../hooks/useTransactions";
 
 export default function Page() {
@@ -32,11 +34,28 @@ export default function Page() {
     }, [loadData])
   );
 
+  // const handleDelete = (id) => {
+  //   Alert.alert("Delete Transaction", "Are you sure you want to delete this transaction?", [
+  //     { text: "Cancel", style: "cancel" },
+  //     { text: "Delete", style: "destructive", onPress: () => deleteTransaction(id) },
+  //   ]);
+  // };
+
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [selectedTransactionId, setSelectedTransactionId] = useState(null);
+
   const handleDelete = (id) => {
-    Alert.alert("Delete Transaction", "Are you sure you want to delete this transaction?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => deleteTransaction(id) },
-    ]);
+    setSelectedTransactionId(id);
+    setDeleteModalVisible(true);
+  };
+
+  const confirmDelete = async () => {
+    setDeleteModalVisible(false);
+
+    if (selectedTransactionId) {
+      await deleteTransaction(selectedTransactionId);
+      setSelectedTransactionId(null);
+    }
   };
 
   if (isLoading && !refreshing) return <PageLoader />;
@@ -87,6 +106,17 @@ export default function Page() {
         ListEmptyComponent={<NoTransactionsFound />}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      />
+
+      <ConfirmationModal
+        visible={deleteModalVisible}
+        title="Delete Transaction"
+        message="Are you sure you want to delete this transaction?"
+        icon="trash-outline"
+        confirmText="Delete"
+        confirmColor={COLORS.expense}
+        onCancel={() => setDeleteModalVisible(false)}
+        onConfirm={confirmDelete}
       />
     </View>
   );

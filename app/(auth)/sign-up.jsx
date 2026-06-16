@@ -148,37 +148,6 @@ export default function SignUpScreen() {
     }
   };
 
-  // if (pendingVerification) {
-  //   return (
-  //     <View style={styles.verificationContainer}>
-  //       <Text style={styles.verificationTitle}>Verify your email</Text>
-
-  //       {error ? (
-  //         <View style={styles.errorBox}>
-  //           <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
-  //           <Text style={styles.errorText}>{error}</Text>
-  //           <TouchableOpacity onPress={() => setError("")}>
-  //             <Ionicons name="close" size={20} color={COLORS.textLight} />
-  //           </TouchableOpacity>
-  //         </View>
-  //       ) : null}
-
-  //       <TextInput
-  //         style={[styles.verificationInput, error && styles.errorInput]}
-  //         value={code}
-  //         keyboardType="numeric"
-  //         placeholder="Enter your verification code"
-  //         placeholderTextColor="#9A8478"
-  //         onChangeText={(code) => setCode(code)}
-  //       />
-
-  //       <TouchableOpacity onPress={onVerifyPress} style={styles.button}>
-  //         <Text style={styles.buttonText}>Verify</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //   );
-  // }
-
   return (
     <KeyboardAwareScrollView
       style={{ flex: 1 }}
@@ -276,15 +245,6 @@ export default function SignUpScreen() {
                 </TouchableOpacity>
               </View>
             ) : null}
-
-            {/* <TextInput
-              style={[styles.verificationInput, error && styles.errorInput]}
-              value={code}
-              keyboardType="numeric"
-              placeholder="Enter your verification code"
-              placeholderTextColor="#9A8478"
-              onChangeText={setCode}
-            /> */}
 
             <View
               style={{
