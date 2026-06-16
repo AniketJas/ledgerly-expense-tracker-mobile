@@ -4,15 +4,18 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Text,
   TextInput,
   TouchableOpacity,
   View
 } from "react-native";
 import { styles } from "../../assets/styles/create.styles";
+import CustomModal from "../../components/CustomModal";
 import { API_URL } from "../../constants/api";
 import { COLORS } from "../../constants/colors";
+
+
+
 
 const CATEGORIES = [
   { id: "food", name: "Food & Drinks", icon: "fast-food" },
@@ -35,15 +38,43 @@ const CreateScreen = () => {
   const [isExpense, setIsExpense] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [modalData, setModalData] = useState({
+    visible: false,
+    type: "success",
+    title: "",
+    message: "",
+  });
+
   const handleCreate = async () => {
     // validations
-    if (!title.trim()) return Alert.alert("Error", "Please enter a transaction title");
+    if (!title.trim()) {
+      setModalData({
+        visible: true,
+        type: "error",
+        title: "Error",
+        message: "Please enter a transaction title",
+      });
+      return;
+    }
     if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
-      Alert.alert("Error", "Please enter a valid amount");
+      setModalData({
+        visible: true,
+        type: "error",
+        title: "Error",
+        message: "Please enter a valid amount",
+      });
       return;
     }
 
-    if (!selectedCategory) return Alert.alert("Error", "Please select a category");
+    if (!selectedCategory) {
+      setModalData({
+        visible: true,
+        type: "error",
+        title: "Error",
+        message: "Please select a category",
+      });
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -71,10 +102,19 @@ const CreateScreen = () => {
         throw new Error(errorData.error || "Failed to create transaction");
       }
 
-      Alert.alert("Success", "Transaction created successfully");
-      router.back();
+      setModalData({
+        visible: true,
+        type: "success",
+        title: "Transaction Added",
+        message: "Your transaction has been saved successfully.",
+      });
     } catch (error) {
-      Alert.alert("Error", error.message || "Failed to create transaction");
+      setModalData({
+        visible: true,
+        type: "error",
+        title: "Error",
+        message: error.message || "Failed to create transaction",
+      });
       console.error("Error creating transaction:", error);
     } finally {
       setIsLoading(false);
@@ -204,6 +244,22 @@ const CreateScreen = () => {
           <ActivityIndicator size="large" color={COLORS.primary} />
         </View>
       )}
+      <CustomModal
+        visible={modalData.visible}
+        type={modalData.type}
+        title={modalData.title}
+        message={modalData.message}
+        onClose={() => {
+          setModalData((prev) => ({
+            ...prev,
+            visible: false,
+          }));
+
+          if (modalData.type === "success") {
+            router.back();
+          }
+        }}
+      />
     </View>
   );
 };
