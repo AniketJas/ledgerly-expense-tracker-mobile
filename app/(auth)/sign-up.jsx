@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { API_URL } from "../../constants/api";
 import { COLORS } from "../../constants/colors";
 
 export default function SignUpScreen() {
@@ -18,6 +19,8 @@ export default function SignUpScreen() {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   // Handle submission of sign-up form
   const onSignUpPress = async () => {
@@ -26,7 +29,7 @@ export default function SignUpScreen() {
 
     // Start sign-up process using email and password provided
     try {
-      if (emailAddress === "" || password === "") {
+      if (emailAddress === "" || password === "" || firstName.trim() === "" || lastName.trim() === "") {
         setError("Please fill in all fields.");
         return;
       } else if (password !== confirmPassword) {
@@ -37,6 +40,8 @@ export default function SignUpScreen() {
       await signUp.create({
         emailAddress,
         password,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
       });
 
       // Send user an email with verification code
@@ -76,6 +81,25 @@ export default function SignUpScreen() {
       // and redirect the user
       if (signUpAttempt.status === "complete") {
         await setActive({ session: signUpAttempt.createdSessionId });
+
+        const response = await fetch(`${API_URL}/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clerk_id: signUpAttempt.createdUserId,
+            email: emailAddress,
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.log(errorData);
+          throw new Error(errorData.error || "Failed to create user");
+        }
         router.replace("/");
       } else {
         // If the status is not complete, check why. User may need to
@@ -148,6 +172,32 @@ export default function SignUpScreen() {
             </TouchableOpacity>
           </View>
         ) : null}
+
+        <View style={{ flexDirection: "row", gap: 12 }}>
+          <TextInput
+            style={[
+              styles.input,
+              error && styles.errorInput,
+              { flex: 1 }
+            ]}
+            value={firstName}
+            placeholder="First Name"
+            placeholderTextColor="#9A8478"
+            onChangeText={setFirstName}
+          />
+
+          <TextInput
+            style={[
+              styles.input,
+              error && styles.errorInput,
+              { flex: 1 }
+            ]}
+            value={lastName}
+            placeholder="Last Name"
+            placeholderTextColor="#9A8478"
+            onChangeText={setLastName}
+          />
+        </View>
 
         <TextInput
           style={[styles.input, error && styles.errorInput]}
