@@ -3,7 +3,7 @@ import { useSignUp } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { API_URL } from "../../constants/api";
@@ -12,6 +12,9 @@ import { COLORS } from "../../constants/colors";
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
+  const inputRefs = useRef([]);
+
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -120,36 +123,61 @@ export default function SignUpScreen() {
     };
   }
 
-  if (pendingVerification) {
-    return (
-      <View style={styles.verificationContainer}>
-        <Text style={styles.verificationTitle}>Verify your email</Text>
+  const handleOtpChange = (value, index) => {
+    if (!/^\d*$/.test(value)) return;
 
-        {error ? (
-          <View style={styles.errorBox}>
-            <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
-            <Text style={styles.errorText}>{error}</Text>
-            <TouchableOpacity onPress={() => setError("")}>
-              <Ionicons name="close" size={20} color={COLORS.textLight} />
-            </TouchableOpacity>
-          </View>
-        ) : null}
+    const newOtp = [...otp];
+    newOtp[index] = value.slice(-1);
+    setOtp(newOtp);
 
-        <TextInput
-          style={[styles.verificationInput, error && styles.errorInput]}
-          value={code}
-          keyboardType="numeric"
-          placeholder="Enter your verification code"
-          placeholderTextColor="#9A8478"
-          onChangeText={(code) => setCode(code)}
-        />
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
 
-        <TouchableOpacity onPress={onVerifyPress} style={styles.button}>
-          <Text style={styles.buttonText}>Verify</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+    const fullCode = newOtp.join("");
+    setCode(fullCode);
+  };
+
+  const handleKeyPress = (e, index) => {
+    if (
+      e.nativeEvent.key === "Backspace" &&
+      !otp[index] &&
+      index > 0
+    ) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  // if (pendingVerification) {
+  //   return (
+  //     <View style={styles.verificationContainer}>
+  //       <Text style={styles.verificationTitle}>Verify your email</Text>
+
+  //       {error ? (
+  //         <View style={styles.errorBox}>
+  //           <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
+  //           <Text style={styles.errorText}>{error}</Text>
+  //           <TouchableOpacity onPress={() => setError("")}>
+  //             <Ionicons name="close" size={20} color={COLORS.textLight} />
+  //           </TouchableOpacity>
+  //         </View>
+  //       ) : null}
+
+  //       <TextInput
+  //         style={[styles.verificationInput, error && styles.errorInput]}
+  //         value={code}
+  //         keyboardType="numeric"
+  //         placeholder="Enter your verification code"
+  //         placeholderTextColor="#9A8478"
+  //         onChangeText={(code) => setCode(code)}
+  //       />
+
+  //       <TouchableOpacity onPress={onVerifyPress} style={styles.button}>
+  //         <Text style={styles.buttonText}>Verify</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // }
 
   return (
     <KeyboardAwareScrollView
@@ -161,83 +189,138 @@ export default function SignUpScreen() {
       <View style={styles.container}>
         <Image source={require("../../assets/images/revenue-i2.png")} style={styles.illustration} />
 
-        <Text style={styles.title}>Create Account</Text>
+        {!pendingVerification && (
+          <>
+            <Text style={styles.title}>Create Account</Text>
 
-        {error ? (
-          <View style={styles.errorBox}>
-            <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
-            <Text style={styles.errorText}>{error}</Text>
-            <TouchableOpacity onPress={() => setError("")}>
-              <Ionicons name="close" size={20} color={COLORS.textLight} />
+            {error ? (
+              <View style={styles.errorBox}>
+                <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
+                <Text style={styles.errorText}>{error}</Text>
+                <TouchableOpacity onPress={() => setError("")}>
+                  <Ionicons name="close" size={20} color={COLORS.textLight} />
+                </TouchableOpacity>
+              </View>
+            ) : null}
+
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <TextInput
+                style={[styles.input, error && styles.errorInput, { flex: 1 }]}
+                value={firstName}
+                placeholder="First Name"
+                placeholderTextColor="#9A8478"
+                onChangeText={setFirstName}
+              />
+
+              <TextInput
+                style={[styles.input, error && styles.errorInput, { flex: 1 }]}
+                value={lastName}
+                placeholder="Last Name"
+                placeholderTextColor="#9A8478"
+                onChangeText={setLastName}
+              />
+            </View>
+
+            <TextInput
+              style={[styles.input, error && styles.errorInput]}
+              autoCapitalize="none"
+              value={emailAddress}
+              placeholderTextColor="#9A8478"
+              placeholder="Enter email"
+              onChangeText={setEmailAddress}
+            />
+
+            <TextInput
+              style={[styles.input, error && styles.errorInput]}
+              value={password}
+              autoCapitalize="none"
+              placeholder="Enter password"
+              placeholderTextColor="#9A8478"
+              secureTextEntry
+              onChangeText={setPassword}
+            />
+
+            <TextInput
+              style={[styles.input, error && styles.errorInput]}
+              value={confirmPassword}
+              autoCapitalize="none"
+              placeholder="Confirm password"
+              placeholderTextColor="#9A8478"
+              secureTextEntry
+              onChangeText={setConfirmPassword}
+            />
+
+            <TouchableOpacity style={styles.button} onPress={onSignUpPress}>
+              <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
-          </View>
-        ) : null}
 
-        <View style={{ flexDirection: "row", gap: 12 }}>
-          <TextInput
-            style={[
-              styles.input,
-              error && styles.errorInput,
-              { flex: 1 }
-            ]}
-            value={firstName}
-            placeholder="First Name"
-            placeholderTextColor="#9A8478"
-            onChangeText={setFirstName}
-          />
+            <View style={styles.footerContainer}>
+              <Text style={styles.footerText}>Already have an account?</Text>
+              <TouchableOpacity onPress={() => router.back()}>
+                <Text style={styles.linkText}>Sign in</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
 
-          <TextInput
-            style={[
-              styles.input,
-              error && styles.errorInput,
-              { flex: 1 }
-            ]}
-            value={lastName}
-            placeholder="Last Name"
-            placeholderTextColor="#9A8478"
-            onChangeText={setLastName}
-          />
-        </View>
+        {pendingVerification && (
+          <>
+            <Text style={styles.title}>Verify your email</Text>
 
-        <TextInput
-          style={[styles.input, error && styles.errorInput]}
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholderTextColor="#9A8478"
-          placeholder="Enter email"
-          onChangeText={(email) => setEmailAddress(email)}
-        />
+            {error ? (
+              <View style={styles.errorBox}>
+                <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
+                <Text style={styles.errorText}>{error}</Text>
+                <TouchableOpacity onPress={() => setError("")}>
+                  <Ionicons name="close" size={20} color={COLORS.textLight} />
+                </TouchableOpacity>
+              </View>
+            ) : null}
 
-        <TextInput
-          style={[styles.input, error && styles.errorInput]}
-          value={password}
-          autoCapitalize="none"
-          placeholder="Enter password"
-          placeholderTextColor="#9A8478"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
+            {/* <TextInput
+              style={[styles.verificationInput, error && styles.errorInput]}
+              value={code}
+              keyboardType="numeric"
+              placeholder="Enter your verification code"
+              placeholderTextColor="#9A8478"
+              onChangeText={setCode}
+            /> */}
 
-        <TextInput
-          style={[styles.input, error && styles.errorInput]}
-          value={confirmPassword}
-          autoCapitalize="none"
-          placeholder="Confirm password"
-          placeholderTextColor="#9A8478"
-          secureTextEntry={true}
-          onChangeText={(password) => setConfirmPassword(password)}
-        />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: 20,
+              }}
+            >
+              {otp.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  ref={(ref) => (inputRefs.current[index] = ref)}
+                  value={digit}
+                  onChangeText={(value) => handleOtpChange(value, index)}
+                  onKeyPress={(e) => handleKeyPress(e, index)}
+                  keyboardType="numeric"
+                  maxLength={1}
+                  textAlign="center"
+                  style={{
+                    width: 50,
+                    height: 60,
+                    borderWidth: 1,
+                    borderColor: error ? COLORS.expense : COLORS.border,
+                    borderRadius: 12,
+                    fontSize: 24,
+                    backgroundColor: COLORS.white,
+                  }}
+                />
+              ))}
+            </View>
 
-        <TouchableOpacity style={styles.button} onPress={onSignUpPress}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
-
-        <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>Already have an account?</Text>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text style={styles.linkText}>Sign in</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity onPress={onVerifyPress} style={styles.button}>
+              <Text style={styles.buttonText}>Verify</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </KeyboardAwareScrollView>
   );
