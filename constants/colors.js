@@ -1,4 +1,3 @@
-// constants/colors.js
 const coffeeTheme = {
   primary: "#8B593E",
   background: "#FFF8F3",
@@ -51,12 +50,53 @@ const oceanTheme = {
   shadow: "#000000",
 };
 
+const boldTheme = {
+  primary: "#FF6B00",
+  background: "#FFF4EC",
+  text: "#1F2937",
+  border: "#FFD4B3",
+  white: "#FFFFFF",
+  textLight: "#F59E0B",
+  expense: "#DC2626",
+  income: "#16A34A",
+  card: "#FFFFFF",
+  shadow: "#000000",
+};
+
+const calmTheme = {
+  primary: "#5C7C89",
+  background: "#F7FAFC",
+  text: "#334155",
+  border: "#D9E2EC",
+  white: "#FFFFFF",
+  textLight: "#94A3B8",
+  expense: "#E57373",
+  income: "#81C784",
+  card: "#FFFFFF",
+  shadow: "#000000",
+};
+
+const amoledTheme = {
+  primary: "#7C3AED",
+  background: "#000000",
+  text: "#F8FAFC",
+  border: "#1E1E1E",
+  white: "#FFFFFF",
+  textLight: "#94A3B8",
+  expense: "#EF4444",
+  income: "#22C55E",
+  card: "#111111",
+  shadow: "#000000",
+};
+
 export const THEMES = {
   coffee: coffeeTheme,
   forest: forestTheme,
   purple: purpleTheme,
   ocean: oceanTheme,
+  bold: boldTheme,
+  calm: calmTheme,
+  amoled: amoledTheme,
 };
 
-// 👇 change this to switch theme
-export const COLORS = THEMES.coffee;
+export const COLORS = THEMES.calm;
