@@ -14,9 +14,6 @@ import CustomModal from "../../components/CustomModal";
 import { API_URL } from "../../constants/api";
 import { COLORS } from "../../constants/colors";
 
-
-
-
 const CATEGORIES = [
   { id: "food", name: "Food & Drinks", icon: "fast-food" },
   { id: "shopping", name: "Shopping", icon: "cart" },
@@ -30,7 +27,6 @@ const CATEGORIES = [
 const CreateScreen = () => {
   const router = useRouter();
   const { user } = useUser();
-
 
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -46,7 +42,6 @@ const CreateScreen = () => {
   });
 
   const handleCreate = async () => {
-    // validations
     if (!title.trim()) {
       setModalData({
         visible: true,
@@ -78,7 +73,6 @@ const CreateScreen = () => {
 
     setIsLoading(true);
     try {
-      // Format the amount (negative for expenses, positive for income)
       const formattedAmount = isExpense
         ? -Math.abs(parseFloat(amount))
         : Math.abs(parseFloat(amount));
