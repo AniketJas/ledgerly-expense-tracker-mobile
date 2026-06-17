@@ -202,16 +202,6 @@ export default function SignUpScreen() {
               onChangeText={setEmailAddress}
             />
 
-            {/* <TextInput
-              style={[styles.input, error && styles.errorInput]}
-              value={password}
-              autoCapitalize="none"
-              placeholder="Enter password"
-              placeholderTextColor="#9A8478"
-              secureTextEntry
-              onChangeText={setPassword}
-            /> */}
-
             <View style={styles.passwordContainer}>
               <TextInput
                 style={[styles.input, error && styles.errorInput]}
@@ -234,16 +224,6 @@ export default function SignUpScreen() {
                 />
               </TouchableOpacity>
             </View>
-
-            {/* <TextInput
-              style={[styles.input, error && styles.errorInput]}
-              value={confirmPassword}
-              autoCapitalize="none"
-              placeholder="Confirm password"
-              placeholderTextColor="#9A8478"
-              secureTextEntry
-              onChangeText={setConfirmPassword}
-            /> */}
 
             <View style={styles.passwordContainer}>
               <TextInput
