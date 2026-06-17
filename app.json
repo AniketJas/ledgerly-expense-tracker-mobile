@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Expense Tracker",
-    "slug": "expense-tracker-app",
+    "name": "Ledgerly",
+    "slug": "ledgerly-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/fullLogo.png",
@@ -10,10 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aniketjas.expensetracker"
+      "bundleIdentifier": "com.aniketjas.ledgerly"
     },
     "android": {
-      "package": "com.aniketjas.expensetracker",
+      "package": "com.aniketjas.ledgerly",
       "adaptiveIcon": {
         "backgroundColor": "#8B593E",
         "foregroundImage": "./assets/images/logo.png",
