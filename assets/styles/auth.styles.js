@@ -1,4 +1,3 @@
-// styles/auth.styles.js
 import { StyleSheet } from "react-native";
 import { COLORS } from "../../constants/colors";
 
@@ -92,6 +91,14 @@ export const styles = StyleSheet.create({
     width: "100%",
     textAlign: "center",
     letterSpacing: 2,
+  },
+  passwordContainer: {
+    position: "relative",
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 16,
+    top: 16,
   },
 
   // 🔴 Error styles

@@ -25,6 +25,9 @@ export default function SignUpScreen() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   // Handle submission of sign-up form
   const onSignUpPress = async () => {
     if (!isLoaded) return;
@@ -199,7 +202,7 @@ export default function SignUpScreen() {
               onChangeText={setEmailAddress}
             />
 
-            <TextInput
+            {/* <TextInput
               style={[styles.input, error && styles.errorInput]}
               value={password}
               autoCapitalize="none"
@@ -207,9 +210,32 @@ export default function SignUpScreen() {
               placeholderTextColor="#9A8478"
               secureTextEntry
               onChangeText={setPassword}
-            />
+            /> */}
 
-            <TextInput
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={[styles.input, error && styles.errorInput]}
+                value={password}
+                autoCapitalize="none"
+                placeholder="Enter password"
+                placeholderTextColor="#9A8478"
+                secureTextEntry={!showPassword}
+                onChangeText={setPassword}
+              />
+
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <Ionicons
+                  name={showPassword ? "eye-off-outline" : "eye-outline"}
+                  size={22}
+                  color={COLORS.textLight}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* <TextInput
               style={[styles.input, error && styles.errorInput]}
               value={confirmPassword}
               autoCapitalize="none"
@@ -217,7 +243,30 @@ export default function SignUpScreen() {
               placeholderTextColor="#9A8478"
               secureTextEntry
               onChangeText={setConfirmPassword}
-            />
+            /> */}
+
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={[styles.input, error && styles.errorInput]}
+                value={confirmPassword}
+                autoCapitalize="none"
+                placeholder="Confirm password"
+                placeholderTextColor="#9A8478"
+                secureTextEntry={!showConfirmPassword}
+                onChangeText={setConfirmPassword}
+              />
+
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <Ionicons
+                  name={showConfirmPassword ? "eye-off-outline" : "eye-outline"}
+                  size={22}
+                  color={COLORS.textLight}
+                />
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity style={styles.button} onPress={onSignUpPress}>
               <Text style={styles.buttonText}>Sign Up</Text>
