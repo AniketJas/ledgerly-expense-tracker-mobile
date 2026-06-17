@@ -69,7 +69,9 @@ export default function Page() {
     >
       <View style={styles.container}>
         <Image source={require("../../assets/images/revenue-i4.png")} style={styles.illustration} />
-        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.title}>
+          Welcome Back to{" "}<Text style={styles.brandText}>Ledgerly</Text>
+        </Text>
 
         {error ? (
           <View style={styles.errorBox}>

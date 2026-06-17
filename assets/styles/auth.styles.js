@@ -62,6 +62,10 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  brandText: {
+    fontWeight: "900",
+    color: COLORS.primary,
+  },
   verificationContainer: {
     flex: 1,
     backgroundColor: COLORS.background,
