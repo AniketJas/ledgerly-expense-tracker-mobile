@@ -34,13 +34,6 @@ export default function Page() {
     }, [loadData])
   );
 
-  // const handleDelete = (id) => {
-  //   Alert.alert("Delete Transaction", "Are you sure you want to delete this transaction?", [
-  //     { text: "Cancel", style: "cancel" },
-  //     { text: "Delete", style: "destructive", onPress: () => deleteTransaction(id) },
-  //   ]);
-  // };
-
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedTransactionId, setSelectedTransactionId] = useState(null);
 
@@ -57,8 +50,6 @@ export default function Page() {
       setSelectedTransactionId(null);
     }
   };
-
-  if (isLoading && !refreshing) return <PageLoader />;
 
   return (
     <View style={styles.container}>
@@ -96,14 +87,18 @@ export default function Page() {
         </View>
       </View>
 
-      {/* FlatList is a performant way to render long lists in React Native. */}
-      {/* it renders items lazily — only those on the screen. */}
       <FlatList
         style={styles.transactionsList}
         contentContainerStyle={styles.transactionsListContent}
         data={transactions}
         renderItem={({ item }) => <TransactionItem item={item} onDelete={handleDelete} />}
-        ListEmptyComponent={<NoTransactionsFound />}
+        ListEmptyComponent={
+          isLoading ? (
+            <PageLoader />
+          ) : (
+            <NoTransactionsFound />
+          )
+        }
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
