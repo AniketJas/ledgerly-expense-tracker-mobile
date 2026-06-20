@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Ledgerly",
-    "slug": "ledgerly-mobile",
+    "slug": "ledgerly",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/fullLogo.png",
@@ -40,18 +40,20 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
+    "owner": "aniket_jas",
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "0213a05a-c7fd-420c-970d-d73449525607"
+        "projectId": "682721bd-edb8-4ae1-a792-1606aa4becf9"
       }
-    },
-    "owner": "aniket_jas"
+    }
   }
 }
