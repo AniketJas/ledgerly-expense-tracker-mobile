@@ -5,18 +5,17 @@
   },
   "build": {
     "preview": {
+      "node": "22.20.0",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
+      "node": "22.20.0",
       "android": {
         "buildType": "apk"
       }
     }
-  },
-  "submit": {
-    "production": {}
   }
 }
