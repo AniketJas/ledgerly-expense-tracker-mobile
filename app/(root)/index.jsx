@@ -7,6 +7,7 @@ import { FlatList, Image, RefreshControl, Text, TouchableOpacity, View } from "r
 import { styles } from "../../assets/styles/home.styles";
 import { BalanceCard } from "../../components/BalanceCard";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import CustomModal from "../../components/CustomModal";
 import NoTransactionsFound from "../../components/NoTransactionsFound";
 import PageLoader from "../../components/PageLoader";
 import { TransactionItem } from "../../components/TransactionItem";
@@ -18,9 +19,15 @@ export default function Page() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
 
-  const { transactions, summary, isLoading, loadData, deleteTransaction } = useTransactions(
-    user.id
-  );
+  const {
+    transactions,
+    summary,
+    isLoading,
+    loadData,
+    deleteTransaction,
+    feedbackModal,
+    hideFeedbackModal,
+  } = useTransactions(user.id);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -112,6 +119,14 @@ export default function Page() {
         confirmColor={COLORS.expense}
         onCancel={() => setDeleteModalVisible(false)}
         onConfirm={confirmDelete}
+      />
+
+      <CustomModal
+        visible={feedbackModal.visible}
+        type={feedbackModal.type}
+        title={feedbackModal.title}
+        message={feedbackModal.message}
+        onClose={hideFeedbackModal}
       />
     </View>
   );

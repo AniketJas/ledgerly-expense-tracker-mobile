@@ -1,7 +1,6 @@
 // react custom hook file
 
 import { useCallback, useState } from "react";
-import { Alert } from "react-native";
 import { API_URL } from "../constants/api";
 
 export const useTransactions = (userId) => {
@@ -12,6 +11,12 @@ export const useTransactions = (userId) => {
     expenses: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [feedbackModal, setFeedbackModal] = useState({
+    visible: false,
+    type: "success",
+    title: "",
+    message: "",
+  });
 
   // useCallback is used for performance reasons, it will memoize the function
   const fetchTransactions = useCallback(async () => {
@@ -50,19 +55,40 @@ export const useTransactions = (userId) => {
     }
   }, [fetchTransactions, fetchSummary, userId]);
 
-  const deleteTransaction = async (id) => {
+  const hideFeedbackModal = useCallback(() => {
+    setFeedbackModal((prev) => ({ ...prev, visible: false }));
+  }, []);
+
+  const deleteTransaction = useCallback(async (id) => {
     try {
       const response = await fetch(`${API_URL}/transactions/${id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Failed to delete transaction");
 
-      // Refresh data after deletion
-      loadData();
-      Alert.alert("Success", "Transaction deleted successfully");
+      await loadData();
+      setFeedbackModal({
+        visible: true,
+        type: "success",
+        title: "Transaction Deleted",
+        message: "The transaction has been removed successfully.",
+      });
     } catch (error) {
       console.error("Error deleting transaction:", error);
-      Alert.alert("Error", error.message);
+      setFeedbackModal({
+        visible: true,
+        type: "error",
+        title: "Delete Failed",
+        message: error.message || "We couldn't delete the transaction.",
+      });
     }
-  };
+  }, [loadData]);
 
-  return { transactions, summary, isLoading, loadData, deleteTransaction };
+  return {
+    transactions,
+    summary,
+    isLoading,
+    loadData,
+    deleteTransaction,
+    feedbackModal,
+    hideFeedbackModal,
+  };
 };
