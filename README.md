@@ -1,4 +1,4 @@
-# Expense Tracker Mobile Client (React Native)
+# Ledgerly - Expense Tracker Mobile Client (React Native)
 
 A mobile-only React Native application for tracking personal expenses and income.  
 This app allows users to sign up, sign in, view their balance and transactions, and add new financial records in real time.
